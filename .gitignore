@@ -1,0 +1,12 @@
+# Gradle / Android build output
+.gradle/
+build/
+app/build/
+local.properties
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# NOTE: keystore/ is intentionally committed (see app/build.gradle). Do NOT ignore it.

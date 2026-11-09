@@ -1,0 +1,53 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.home.suntvboot'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.home.suntvboot'
+        minSdk 21
+        // Kept at 28 on purpose: the boot auto-launch relies on the pre-Android-10
+        // background-activity-start behaviour (plus the SYSTEM_ALERT_WINDOW appop
+        // granted at install time). Do not bump without re-testing autostart.
+        targetSdk 28
+        versionCode 1
+        versionName '1.0'
+    }
+
+    // Intentionally-public debug-grade signing key, committed to the repo so that
+    // every release shares ONE signature. That means an updated APK installs over
+    // an older one without "signatures do not match". It is NOT a secret and grants
+    // no privilege beyond letting the APK install. Rebuild with your own key if you
+    // prefer; you would then need to uninstall before installing a repo release.
+    signingConfigs {
+        release {
+            storeFile file('../keystore/suntvboot.keystore')
+            storePassword 'android'
+            keyAlias 'd'
+            keyPassword 'android'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lint {
+        // targetSdk 28 is intentional (see defaultConfig) — this is a sideloaded
+        // STB helper, not a Play Store app, so the "target a recent API" rule
+        // does not apply. Don't let it fail the release build.
+        disable 'ExpiredTargetSdkVersion'
+        abortOnError false
+    }
+}
